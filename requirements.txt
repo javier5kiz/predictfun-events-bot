@@ -1,0 +1,19 @@
+# Predict.fun Events Contrast Bot — Dependencies
+#
+# Install: pip install -r requirements.txt
+
+# WebSocket client for the Predict.fun realtime API
+websockets>=12.0,<14.0
+
+# HTTP requests for the REST API and Binance oracle
+requests>=2.31.0
+
+# Ethereum wallet & EIP-712 typed data signing
+web3>=6.15.0
+eth-account>=0.11.0
+
+# Environment variable loading from .env
+python-dotenv>=1.0.0
+
+# Optional: better retry logic
+tenacity>=8.2.0

@@ -1,0 +1,689 @@
+2026-07-29 20:00:57 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:00:57 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:00:57 | INFO    | predict_bot.bot |   Mode: LIVE
+2026-07-29 20:00:57 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:00:57 | INFO    | predict_bot.bot |   Wallet: NOT CONFIGURED
+2026-07-29 20:00:57 | INFO    | predict_bot.bot |   BTC threshold: ±$5.0
+2026-07-29 20:00:57 | INFO    | predict_bot.bot |   Window: 2.0s
+2026-07-29 20:00:57 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:00:57 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:00:57 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 20:00:57 | ERROR   | predict_bot.bot | Config error: PREDICT_API_KEY is required for mainnet
+2026-07-29 20:00:57 | ERROR   | predict_bot.bot | Config error: WALLET_PRIVATE_KEY is required for order signing
+2026-07-29 20:00:57 | ERROR   | predict_bot.bot | Fix config errors before running in LIVE mode
+2026-07-29 20:01:10 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:01:10 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:01:10 | INFO    | predict_bot.bot |   Mode: LIVE
+2026-07-29 20:01:10 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:01:10 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 20:01:10 | INFO    | predict_bot.bot |   BTC threshold: ±$5.0
+2026-07-29 20:01:10 | INFO    | predict_bot.bot |   Window: 2.0s
+2026-07-29 20:01:10 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:01:10 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:01:10 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 20:01:10 | INFO    | predict_bot.auth | Fetching auth message from Predict.fun…
+2026-07-29 20:01:12 | INFO    | predict_bot.auth | Auth message signed, exchanging for JWT…
+2026-07-29 20:01:14 | INFO    | predict_bot.auth | JWT token obtained successfully ✓
+2026-07-29 20:01:14 | INFO    | predict_bot.bot | Authentication successful
+2026-07-29 20:01:14 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 20:01:24 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-969422
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Strike       : $64664.69
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-969665
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Strike       : $64108.01
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-970261
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Strike       : $63964.01
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-970263
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Strike       : $63808.33
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-971024
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Strike       : $63926.66
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-974773
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Strike       : $64269.83
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-997874
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Strike       : $63988.01
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-1008181
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-1008182
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:24 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-969422
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Strike       : $64664.69
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-969665
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Strike       : $64108.01
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-970261
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Strike       : $63964.01
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-970263
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Strike       : $63808.33
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-971024
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Strike       : $63926.66
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-974773
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Strike       : $64269.83
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-997874
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Strike       : $63988.01
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-1008181
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-1008182
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:32 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-969422
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Strike       : $64664.69
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-969665
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Strike       : $64108.01
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-970261
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Strike       : $63964.01
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-970263
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Strike       : $63808.33
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-971024
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Strike       : $63926.66
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-974773
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Strike       : $64269.83
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-997874
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Strike       : $63988.01
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-1008181
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-1008182
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:41 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-969422
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Strike       : $64664.69
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-969665
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Strike       : $64108.01
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-970261
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Strike       : $63964.01
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-970263
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Strike       : $63808.33
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-971024
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Strike       : $63926.66
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-974773
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Strike       : $64269.83
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-997874
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Strike       : $63988.01
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-1008181
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-1008182
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:49 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:54 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 20:01:58 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-969422
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Strike       : $64664.69
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-969665
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Strike       : $64108.01
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-970261
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Strike       : $63964.01
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-970263
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Strike       : $63808.33
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-971024
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Strike       : $63926.66
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-974773
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Strike       : $64269.83
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-997874
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Strike       : $63988.01
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-1008181
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | NEW CONTRACT : BTCUSDT-1008182
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Expires      : ?
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:01:58 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 20:01:59 | INFO    | predict_bot.keepalive | Keep-alive server stopped
+2026-07-29 20:09:20 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:09:20 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:09:20 | INFO    | predict_bot.bot |   Mode: DRY RUN
+2026-07-29 20:09:20 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:09:20 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 20:09:20 | INFO    | predict_bot.bot |   BTC threshold: ±$5.0
+2026-07-29 20:09:20 | INFO    | predict_bot.bot |   Window: 2.0s
+2026-07-29 20:09:20 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:09:20 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:09:20 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 20:09:20 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 20:09:31 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:09:31 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:09:31 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1008182
+2026-07-29 20:09:31 | INFO    | predict_bot.bot | Strike       : $64269.835
+2026-07-29 20:09:31 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:15:00Z
+2026-07-29 20:09:31 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2PM-2:15PM ET
+2026-07-29 20:09:31 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:09:40 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:09:48 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:09:49 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 20:09:56 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:09:57 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 20:09:57 | INFO    | predict_bot.keepalive | Keep-alive server stopped
+2026-07-29 20:10:08 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:10:08 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:10:08 | INFO    | predict_bot.bot |   Mode: DRY RUN
+2026-07-29 20:10:08 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:10:08 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 20:10:08 | INFO    | predict_bot.bot |   BTC threshold: ±$5.0
+2026-07-29 20:10:08 | INFO    | predict_bot.bot |   Window: 2.0s
+2026-07-29 20:10:08 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:10:08 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:10:08 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 20:10:08 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 20:10:17 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:10:17 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:10:17 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1008627
+2026-07-29 20:10:17 | INFO    | predict_bot.bot | Strike       : $64433.995
+2026-07-29 20:10:17 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:15:00Z
+2026-07-29 20:10:17 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:10PM-2:15PM ET
+2026-07-29 20:10:17 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:10:25 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:10:34 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:10:37 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 20:10:42 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:10:42 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 20:10:43 | INFO    | predict_bot.keepalive | Keep-alive server stopped
+2026-07-29 20:11:25 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:11:25 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:11:25 | INFO    | predict_bot.bot |   Mode: DRY RUN
+2026-07-29 20:11:25 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:11:25 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 20:11:25 | INFO    | predict_bot.bot |   BTC threshold: ±$5.0
+2026-07-29 20:11:25 | INFO    | predict_bot.bot |   Window: 2.0s
+2026-07-29 20:11:25 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:11:25 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:11:25 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 20:11:25 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 20:11:33 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:11:33 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:11:33 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1008627
+2026-07-29 20:11:33 | INFO    | predict_bot.bot | Strike       : $64433.995
+2026-07-29 20:11:33 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:15:00Z
+2026-07-29 20:11:33 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:10PM-2:15PM ET
+2026-07-29 20:11:33 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:11:42 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:11:50 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:11:59 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:11:59 | INFO    | predict_bot.bot | Waiting... 180s until execution window
+2026-07-29 20:12:08 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:12:16 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:12:24 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:12:33 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:12:41 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:12:50 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:12:54 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 20:12:58 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:12:59 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 20:12:59 | INFO    | predict_bot.keepalive | Keep-alive server stopped
+2026-07-29 20:13:06 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:13:06 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:13:06 | INFO    | predict_bot.bot |   Mode: DRY RUN
+2026-07-29 20:13:06 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:13:06 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 20:13:06 | INFO    | predict_bot.bot |   BTC threshold: ±$5.0
+2026-07-29 20:13:06 | INFO    | predict_bot.bot |   Window: 2.0s
+2026-07-29 20:13:06 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:13:06 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:13:06 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 20:13:06 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 20:13:15 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:13:15 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:13:15 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1008627
+2026-07-29 20:13:15 | INFO    | predict_bot.bot | Strike       : $64433.995
+2026-07-29 20:13:15 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:15:00Z
+2026-07-29 20:13:15 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:10PM-2:15PM ET
+2026-07-29 20:13:15 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:13:23 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:13:32 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:13:40 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:13:48 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:13:57 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:14:05 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:14:14 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:14:23 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:14:31 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:14:40 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:14:48 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:14:56 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:15:05 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:15:14 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:15:22 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:15:22 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:15:22 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1008634
+2026-07-29 20:15:22 | INFO    | predict_bot.bot | Strike       : $64335.995
+2026-07-29 20:15:22 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:20:00Z
+2026-07-29 20:15:22 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:15PM-2:20PM ET
+2026-07-29 20:15:22 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:15:31 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:15:40 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:15:48 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:15:56 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:16:05 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:16:14 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:16:22 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:16:30 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:16:39 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:16:39 | INFO    | predict_bot.bot | Waiting... 201s until execution window
+2026-07-29 20:16:47 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:16:55 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:17:04 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:17:13 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:17:21 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:17:30 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:17:42 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:17:50 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:17:59 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:17:59 | INFO    | predict_bot.bot | Waiting... 120s until execution window
+2026-07-29 20:18:05 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 20:18:07 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:18:07 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 20:18:08 | INFO    | predict_bot.keepalive | Keep-alive server stopped
+2026-07-29 20:18:23 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:18:23 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:18:23 | INFO    | predict_bot.bot |   Mode: DRY RUN
+2026-07-29 20:18:23 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:18:23 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 20:18:23 | INFO    | predict_bot.bot |   BTC threshold: ±$5.0
+2026-07-29 20:18:23 | INFO    | predict_bot.bot |   Window: 2.0s
+2026-07-29 20:18:23 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:18:23 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:18:23 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 20:18:23 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 20:18:31 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:18:31 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:18:31 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1008634
+2026-07-29 20:18:31 | INFO    | predict_bot.bot | Strike       : $64335.995
+2026-07-29 20:18:31 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:20:00Z
+2026-07-29 20:18:31 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:15PM-2:20PM ET
+2026-07-29 20:18:31 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:18:39 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:18:39 | INFO    | predict_bot.bot | Waiting... 80s until execution window
+2026-07-29 20:18:48 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:18:56 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:19:04 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:19:13 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:19:21 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:19:30 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:19:38 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:19:47 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:19:55 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:20:04 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:20:12 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:20:20 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:20:20 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:20:20 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1008638
+2026-07-29 20:20:20 | INFO    | predict_bot.bot | Strike       : $64241.725
+2026-07-29 20:20:20 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:25:00Z
+2026-07-29 20:20:20 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:20PM-2:25PM ET
+2026-07-29 20:20:20 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:20:29 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:20:29 | INFO    | predict_bot.bot | Waiting... 271s until execution window
+2026-07-29 20:20:37 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:20:45 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:20:54 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:21:02 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:21:10 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:21:19 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:21:19 | INFO    | predict_bot.bot | Waiting... 221s until execution window
+2026-07-29 20:21:28 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:21:37 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:21:45 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:21:54 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:22:03 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:22:11 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:22:20 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:22:28 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:22:37 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:22:46 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:22:54 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:23:03 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:23:11 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:23:20 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:23:28 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:23:36 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:23:45 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:23:53 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:24:02 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:24:10 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:24:19 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:24:19 | INFO    | predict_bot.bot | Waiting... 41s until execution window
+2026-07-29 20:24:27 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:24:36 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:24:44 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:24:53 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:25:04 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:25:13 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:25:21 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:25:21 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:25:21 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1009597
+2026-07-29 20:25:21 | INFO    | predict_bot.bot | Strike       : $64118.505
+2026-07-29 20:25:21 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:30:00Z
+2026-07-29 20:25:21 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:25PM-2:30PM ET
+2026-07-29 20:25:21 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:25:22 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 20:25:30 | INFO    | predict_bot.predict_client | Total markets fetched: 1000
+2026-07-29 20:25:31 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 20:25:31 | INFO    | predict_bot.keepalive | Keep-alive server stopped
+2026-07-29 20:26:11 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:26:11 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:26:11 | INFO    | predict_bot.bot |   Mode: DRY RUN
+2026-07-29 20:26:11 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:26:11 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 20:26:11 | INFO    | predict_bot.bot |   BTC threshold: ±$5.0
+2026-07-29 20:26:11 | INFO    | predict_bot.bot |   Window: 10.0s
+2026-07-29 20:26:11 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:26:11 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:26:11 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 20:26:11 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 20:27:43 | ERROR   | predict_bot.bot | Trading loop error: ('Connection aborted.', ConnectionResetError(104, 'Connection reset by peer'))
+2026-07-29 20:30:05 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:30:05 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:30:05 | INFO    | predict_bot.bot |   Mode: DRY RUN
+2026-07-29 20:30:05 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:30:05 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 20:30:05 | INFO    | predict_bot.bot |   BTC threshold: ±$7.0
+2026-07-29 20:30:05 | INFO    | predict_bot.bot |   Window: 1.5s
+2026-07-29 20:30:05 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:30:05 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:30:05 | WARNING | predict_bot.keepalive | Keep-alive server failed to start: [Errno 98] Address already in use
+2026-07-29 20:30:05 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 20:33:09 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 20:33:09 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 20:33:10 | INFO    | predict_bot.keepalive | Keep-alive server stopped
+2026-07-29 20:37:04 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 20:37:04 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 20:40:34 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:40:34 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:40:34 | INFO    | predict_bot.bot |   Mode: DRY RUN
+2026-07-29 20:40:34 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:40:34 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 20:40:34 | INFO    | predict_bot.bot |   BTC threshold: ±$7.0
+2026-07-29 20:40:34 | INFO    | predict_bot.bot |   Window: 1.5s
+2026-07-29 20:40:34 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:40:34 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:40:34 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 20:40:34 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 20:40:35 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:40:35 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1014865
+2026-07-29 20:40:35 | INFO    | predict_bot.bot | Strike       : $64188.745
+2026-07-29 20:40:35 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:45:00Z
+2026-07-29 20:40:35 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:40PM-2:45PM ET
+2026-07-29 20:40:35 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:40:39 | INFO    | predict_bot.bot | Waiting... 260s until execution window
+2026-07-29 20:40:49 | INFO    | predict_bot.bot | Waiting... 251s until execution window
+2026-07-29 20:41:09 | INFO    | predict_bot.bot | Waiting... 230s until execution window
+2026-07-29 20:41:29 | INFO    | predict_bot.bot | Waiting... 210s until execution window
+2026-07-29 20:41:39 | INFO    | predict_bot.bot | Waiting... 201s until execution window
+2026-07-29 20:41:59 | INFO    | predict_bot.bot | Waiting... 180s until execution window
+2026-07-29 20:42:09 | INFO    | predict_bot.bot | Waiting... 171s until execution window
+2026-07-29 20:42:29 | INFO    | predict_bot.bot | Waiting... 150s until execution window
+2026-07-29 20:42:39 | INFO    | predict_bot.bot | Waiting... 141s until execution window
+2026-07-29 20:42:59 | INFO    | predict_bot.bot | Waiting... 120s until execution window
+2026-07-29 20:43:19 | INFO    | predict_bot.bot | Waiting... 100s until execution window
+2026-07-29 20:43:29 | INFO    | predict_bot.bot | Waiting... 91s until execution window
+2026-07-29 20:43:59 | INFO    | predict_bot.bot | Waiting... 61s until execution window
+2026-07-29 20:44:19 | INFO    | predict_bot.bot | Waiting... 41s until execution window
+2026-07-29 20:44:39 | INFO    | predict_bot.bot | Waiting... 21s until execution window
+2026-07-29 20:45:10 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:45:10 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1014872
+2026-07-29 20:45:11 | INFO    | predict_bot.bot | Strike       : $64414.005
+2026-07-29 20:45:11 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:50:00Z
+2026-07-29 20:45:11 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:45PM-2:50PM ET
+2026-07-29 20:45:11 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:45:29 | INFO    | predict_bot.bot | Waiting... 271s until execution window
+2026-07-29 20:45:49 | INFO    | predict_bot.bot | Waiting... 250s until execution window
+2026-07-29 20:45:59 | INFO    | predict_bot.bot | Waiting... 241s until execution window
+2026-07-29 20:46:19 | INFO    | predict_bot.bot | Waiting... 220s until execution window
+2026-07-29 20:46:29 | INFO    | predict_bot.bot | Waiting... 211s until execution window
+2026-07-29 20:46:49 | INFO    | predict_bot.bot | Waiting... 190s until execution window
+2026-07-29 20:47:19 | INFO    | predict_bot.bot | Waiting... 161s until execution window
+2026-07-29 20:47:32 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 20:47:34 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 20:47:34 | INFO    | predict_bot.keepalive | Keep-alive server stopped
+2026-07-29 20:48:22 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:48:22 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 20:48:22 | INFO    | predict_bot.bot |   Mode: DRY RUN
+2026-07-29 20:48:22 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 20:48:22 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 20:48:22 | INFO    | predict_bot.bot |   BTC threshold: ±$7.0
+2026-07-29 20:48:22 | INFO    | predict_bot.bot |   Window: 1.5s
+2026-07-29 20:48:22 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 20:48:22 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 20:48:22 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 20:48:22 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 20:48:23 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:48:23 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1014872
+2026-07-29 20:48:23 | INFO    | predict_bot.bot | Strike       : $64414.005
+2026-07-29 20:48:23 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:50:00Z
+2026-07-29 20:48:23 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:45PM-2:50PM ET
+2026-07-29 20:48:23 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:48:29 | INFO    | predict_bot.bot | Waiting... 91s until execution window
+2026-07-29 20:48:49 | INFO    | predict_bot.bot | Waiting... 70s until execution window
+2026-07-29 20:48:59 | INFO    | predict_bot.bot | Waiting... 60s until execution window
+2026-07-29 20:49:09 | INFO    | predict_bot.bot | Waiting... 51s until execution window
+2026-07-29 20:49:39 | INFO    | predict_bot.bot | Waiting... 20s until execution window
+2026-07-29 20:49:49 | INFO    | predict_bot.bot | Waiting... 11s until execution window
+2026-07-29 20:49:59 | WARNING | predict_bot.strategy | [LAST 1.4s] BTC=$64509.1 | Strike=$64414.0 | Diff=+95.08
+2026-07-29 20:49:59 | WARNING | predict_bot.strategy | >>> SIGNAL UP: +95.08 — executing 80% BUY outcome=yes <<<
+2026-07-29 20:49:59 | INFO    | predict_bot.bot | [DRY RUN] Would MARKET FOK: market=1014872 outcome=YES alloc=80%
+2026-07-29 20:50:14 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:50:14 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1015239
+2026-07-29 20:50:14 | INFO    | predict_bot.bot | Strike       : $64509.095
+2026-07-29 20:50:14 | INFO    | predict_bot.bot | Expires      : 2026-07-29T18:55:00Z
+2026-07-29 20:50:14 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:50PM-2:55PM ET
+2026-07-29 20:50:14 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:50:29 | INFO    | predict_bot.bot | Waiting... 271s until execution window
+2026-07-29 20:50:59 | INFO    | predict_bot.bot | Waiting... 240s until execution window
+2026-07-29 20:51:09 | INFO    | predict_bot.bot | Waiting... 231s until execution window
+2026-07-29 20:51:29 | INFO    | predict_bot.bot | Waiting... 210s until execution window
+2026-07-29 20:51:59 | INFO    | predict_bot.bot | Waiting... 180s until execution window
+2026-07-29 20:52:09 | INFO    | predict_bot.bot | Waiting... 171s until execution window
+2026-07-29 20:52:39 | INFO    | predict_bot.bot | Waiting... 140s until execution window
+2026-07-29 20:52:49 | INFO    | predict_bot.bot | Waiting... 131s until execution window
+2026-07-29 20:53:19 | INFO    | predict_bot.bot | Waiting... 101s until execution window
+2026-07-29 20:53:39 | INFO    | predict_bot.bot | Waiting... 80s until execution window
+2026-07-29 20:53:49 | INFO    | predict_bot.bot | Waiting... 71s until execution window
+2026-07-29 20:54:19 | INFO    | predict_bot.bot | Waiting... 41s until execution window
+2026-07-29 20:54:39 | INFO    | predict_bot.bot | Waiting... 20s until execution window
+2026-07-29 20:54:49 | INFO    | predict_bot.bot | Waiting... 11s until execution window
+2026-07-29 20:54:59 | WARNING | predict_bot.strategy | [LAST 0.9s] BTC=$64600.0 | Strike=$64509.1 | Diff=+90.89
+2026-07-29 20:54:59 | WARNING | predict_bot.strategy | >>> SIGNAL UP: +90.89 — executing 80% BUY outcome=yes <<<
+2026-07-29 20:54:59 | INFO    | predict_bot.bot | [DRY RUN] Would MARKET FOK: market=1015239 outcome=YES alloc=80%
+2026-07-29 20:55:15 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:55:15 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1015242
+2026-07-29 20:55:15 | INFO    | predict_bot.bot | Strike       : $64599.995
+2026-07-29 20:55:15 | INFO    | predict_bot.bot | Expires      : 2026-07-29T19:00:00Z
+2026-07-29 20:55:15 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 2:55PM-3PM ET
+2026-07-29 20:55:15 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 20:55:19 | INFO    | predict_bot.bot | Waiting... 281s until execution window
+2026-07-29 20:55:20 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 20:55:21 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 20:55:21 | INFO    | predict_bot.keepalive | Keep-alive server stopped
+2026-07-29 21:03:03 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 21:03:03 | INFO    | predict_bot.bot |   Predict.fun Fast-Expiry Bot — OKX-style
+2026-07-29 21:03:03 | INFO    | predict_bot.bot |   Mode: DRY RUN
+2026-07-29 21:03:03 | INFO    | predict_bot.bot |   API: https://api.predict.fun
+2026-07-29 21:03:03 | INFO    | predict_bot.bot |   Wallet: 0xaF911CF14e9e901ac1b93250C0d7338E6c3941E2
+2026-07-29 21:03:03 | INFO    | predict_bot.bot |   BTC threshold: ±$30.0
+2026-07-29 21:03:03 | INFO    | predict_bot.bot |   Window: 1.5s
+2026-07-29 21:03:03 | INFO    | predict_bot.bot |   Allocation: 80% of balance
+2026-07-29 21:03:03 | INFO    | predict_bot.bot | ============================================================
+2026-07-29 21:03:03 | INFO    | predict_bot.keepalive | Keep-alive HTTP server listening on :10000
+2026-07-29 21:03:03 | INFO    | predict_bot.bot | Entering trading loop…
+2026-07-29 21:03:06 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 21:03:06 | INFO    | predict_bot.bot | NEXT CONTRACT : BTCUSDT-1015940
+2026-07-29 21:03:06 | INFO    | predict_bot.bot | Strike       : $64501.995
+2026-07-29 21:03:06 | INFO    | predict_bot.bot | Expires      : 2026-07-29T19:05:00Z
+2026-07-29 21:03:06 | INFO    | predict_bot.bot | Question     : Bitcoin Up or Down - July 29, 3PM-3:05PM ET
+2026-07-29 21:03:06 | INFO    | predict_bot.bot | --------------------------------------------------
+2026-07-29 21:03:09 | INFO    | predict_bot.bot | Waiting... 111s until execution window
+2026-07-29 21:03:19 | INFO    | predict_bot.bot | Waiting... 101s until execution window
+2026-07-29 21:03:29 | INFO    | predict_bot.bot | Waiting... 91s until execution window
+2026-07-29 21:03:39 | INFO    | predict_bot.bot | Waiting... 81s until execution window
+2026-07-29 21:03:49 | INFO    | predict_bot.bot | Waiting... 71s until execution window
+2026-07-29 21:03:59 | INFO    | predict_bot.bot | Waiting... 60s until execution window
+2026-07-29 21:04:09 | INFO    | predict_bot.bot | Waiting... 50s until execution window
+2026-07-29 21:04:19 | INFO    | predict_bot.bot | Waiting... 40s until execution window
+2026-07-29 21:04:59 | WARNING | predict_bot.strategy | [LAST 0.7s] BTC=$64464.0 | Strike=$64502.0 | Diff=-38.00
+2026-07-29 21:04:59 | WARNING | predict_bot.strategy | >>> SIGNAL DOWN: -38.00 — executing 80% BUY outcome=no <<<
+2026-07-29 21:04:59 | INFO    | predict_bot.bot | [DRY RUN] Would MARKET FOK: market=1015940 outcome=NO alloc=80%
+2026-07-29 21:05:01 | INFO    | predict_bot.bot | Received signal 15, shutting down…
+2026-07-29 21:05:11 | INFO    | predict_bot.bot | Stopping bot…
+2026-07-29 21:05:11 | INFO    | predict_bot.keepalive | Keep-alive server stopped
+2026-07-29 21:10:02 | INFO    | predict_bot.monitor | ============================================================
+2026-07-29 21:10:02 | INFO    | predict_bot.monitor |   LIQUIDITY MONITOR
+2026-07-29 21:10:02 | INFO    | predict_bot.monitor |   Duration: 30 min
+2026-07-29 21:10:02 | INFO    | predict_bot.monitor |   Threshold: ±$30.0
+2026-07-29 21:10:02 | INFO    | predict_bot.monitor |   Window: 1.5s
+2026-07-29 21:10:02 | INFO    | predict_bot.monitor | ============================================================
+2026-07-29 21:10:05 | INFO    | predict_bot.monitor | → Contract #1: 1015947 expires 19:15:00Z strike=$64228.985
+2026-07-29 21:15:00 | WARNING | predict_bot.strategy | [LAST 0.4s] BTC=$64284.0 | Strike=$64229.0 | Diff=+55.03
+2026-07-29 21:15:00 | WARNING | predict_bot.strategy | >>> SIGNAL UP: +55.03 — executing 80% BUY outcome=yes <<<
+2026-07-29 21:15:01 | WARNING | predict_bot.monitor | [SIGNAL #1] mkt=1015947 UP diff=$55 asks=0 bestAsk=None
+2026-07-29 21:15:13 | INFO    | predict_bot.monitor | → Contract #2: 1015955 expires 19:20:00Z strike=$64284.005
+2026-07-29 21:20:00 | INFO    | predict_bot.strategy | |Δ|=$16.00 ≤ $30.0 threshold — skip (too close)
+2026-07-29 21:20:14 | INFO    | predict_bot.monitor | → Contract #3: 1017951 expires 19:25:00Z strike=$64264.705
+2026-07-29 21:25:14 | INFO    | predict_bot.monitor | → Contract #4: 1017954 expires 19:30:00Z strike=$64146.005
+2026-07-29 21:29:59 | WARNING | predict_bot.strategy | [LAST 1.5s] BTC=$64018.3 | Strike=$64146.0 | Diff=-127.72
+2026-07-29 21:29:59 | WARNING | predict_bot.strategy | >>> SIGNAL DOWN: -127.72 — executing 80% BUY outcome=no <<<
+2026-07-29 21:29:59 | WARNING | predict_bot.monitor | [SIGNAL #2] mkt=1017954 DOWN diff=$128 asks=20 bestAsk=0.01
+2026-07-29 21:30:13 | INFO    | predict_bot.monitor | → Contract #5: 1021840 expires 19:35:00Z strike=$64033.765
+2026-07-29 21:34:59 | WARNING | predict_bot.strategy | [LAST 0.8s] BTC=$63961.6 | Strike=$64033.8 | Diff=-72.18
+2026-07-29 21:34:59 | WARNING | predict_bot.strategy | >>> SIGNAL DOWN: -72.18 — executing 80% BUY outcome=no <<<
+2026-07-29 21:35:00 | WARNING | predict_bot.monitor | [SIGNAL #3] mkt=1021840 DOWN diff=$72 asks=14 bestAsk=0.01
+2026-07-29 21:35:12 | INFO    | predict_bot.monitor | → Contract #6: 1021842 expires 19:40:00Z strike=$63961.585
+2026-07-29 21:39:59 | WARNING | predict_bot.strategy | [LAST 1.4s] BTC=$63897.1 | Strike=$63961.6 | Diff=-64.47
+2026-07-29 21:39:59 | WARNING | predict_bot.strategy | >>> SIGNAL DOWN: -64.47 — executing 80% BUY outcome=no <<<
+2026-07-29 21:39:59 | WARNING | predict_bot.monitor | [SIGNAL #4] mkt=1021842 DOWN diff=$64 asks=19 bestAsk=0.01
+2026-07-29 21:40:03 | INFO    | predict_bot.monitor | Shutting down monitor…
+2026-07-29 21:40:03 | INFO    | predict_bot.monitor | Shutting down monitor…
+2026-07-29 21:40:13 | INFO    | predict_bot.monitor | ==================================================
+2026-07-29 21:40:13 | INFO    | predict_bot.monitor |   MONITORING COMPLETE
+2026-07-29 21:40:13 | INFO    | predict_bot.monitor |   Contracts discovered: 6
+2026-07-29 21:40:13 | INFO    | predict_bot.monitor |   Signals generated: 4
+2026-07-29 21:40:13 | INFO    | predict_bot.monitor |   Records saved to: orderbook_records.jsonl
+2026-07-29 21:40:13 | INFO    | predict_bot.monitor | ==================================================
