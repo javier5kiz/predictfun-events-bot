@@ -26,18 +26,27 @@ class Trader:
 
     def execute_signal(self, signal: TradeSignal) -> Optional[tuple[str, str, str]]:
         # ── Fetch REAL on-chain USDT balance ──────────────────────────
-        wallet = self.auth.wallet_address
-        if wallet:
-            balance = self.client.get_usdt_balance(wallet)
+        # Check the Predict Account (smart wallet) first, fall back to EOA
+        balance_address = self.auth.maker_address
+        log.info(f"Checking USDT balance for: {balance_address}")
+
+        balance = self.client.get_usdt_balance(balance_address)
+        if balance is None or balance <= 0:
+            # Also try EOA in case funds are there
+            if balance_address != self.auth.wallet_address:
+                log.info(f"No balance in smart wallet, checking EOA: {self.auth.wallet_address}")
+                balance = self.client.get_usdt_balance(self.auth.wallet_address)
             if balance is None or balance <= 0:
-                log.warning(f"Could not fetch on-chain USDT balance for {wallet}, "
-                            f"using config default ${self.config.max_position_usdt:.2f}")
+                log.warning(
+                    f"Could not fetch on-chain USDT balance for {balance_address}"
+                    f"{' or EOA ' + self.auth.wallet_address if balance_address != self.auth.wallet_address else ''}, "
+                    f"using config default ${self.config.max_position_usdt:.2f}"
+                )
                 balance = self.config.max_position_usdt
             else:
-                log.info(f"Real USDT balance: ${balance:.2f}")
+                log.info(f"Real USDT balance (EOA): ${balance:.2f}")
         else:
-            log.warning("No wallet address configured, using default balance")
-            balance = self.config.max_position_usdt
+            log.info(f"Real USDT balance (smart wallet): ${balance:.2f}")
 
         value_usdt = balance * signal.size_alloc
         if value_usdt < 1.0:
@@ -51,7 +60,8 @@ class Trader:
             f"EXECUTING: marketId={signal.market_id} | "
             f"outcome={signal.outcome} | "
             f"sz={value_usdt:.1f} | "
-            f"costPerUnit=$0.9980 | "
+            f"maker={self.auth.maker_address} | "
+            f"sigType={self.auth.signature_type} | "
             f"balance=${balance:.4f}"
         )
 
@@ -184,9 +194,17 @@ class Trader:
         salt           = str(random.randint(1, 2 ** 63 - 1))
         expiration     = str(int(time.time()) + 30)
 
-        maker  = self.auth.wallet_address
+        # maker = the address holding USDT (Predict Account or EOA)
+        # signer = the EOA that signs the order
+        maker  = self.auth.maker_address
         signer = self.auth.wallet_address
         taker  = "0x0000000000000000000000000000000000000000"
+        sig_type = self.auth.signature_type
+
+        log.info(
+            f"Order params: maker={maker} signer={signer} "
+            f"sigType={sig_type} negRisk={is_neg_risk} yieldBearing={is_yield_bearing}"
+        )
 
         order_data = {
             "salt":          salt,
@@ -200,7 +218,7 @@ class Trader:
             "nonce":         "0",
             "feeRateBps":    str(fee_bps),
             "side":          0,
-            "signatureType": 0,
+            "signatureType": sig_type,
         }
 
         try:
@@ -223,9 +241,9 @@ class Trader:
                 "order": {
                     "hash":          str(order_hash),
                     "salt":          str(signed_order["salt"]),
-                    "maker":         str(maker),
-                    "signer":        str(signer),
-                    "taker":         str(taker),
+                    "maker":         str(signed_order["maker"]),
+                    "signer":        str(signed_order["signer"]),
+                    "taker":         str(signed_order["taker"]),
                     "tokenId":       str(token_id),
                     "makerAmount":   str(signed_order["makerAmount"]),
                     "takerAmount":   str(signed_order["takerAmount"]),
@@ -244,8 +262,6 @@ class Trader:
         }
 
         try:
-            # Use POST /v1/orders (regular order creation for EOA wallet)
-            # NOT /v1/oauth/orders (that's the OAuth list-orders endpoint)
             resp = self.client.session.post(
                 f"{self.client.base_url}/v1/orders",
                 headers=self.auth.jwt_headers,

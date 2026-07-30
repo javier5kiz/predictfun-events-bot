@@ -62,6 +62,9 @@ class PredictAuth:
         self.jwt_expires_at: float = 0
         self._w3 = Web3(Web3.HTTPProvider(config.rpc_provider_url))
 
+        # Predict Account (smart wallet) address — fetched after JWT auth
+        self.predict_account_address: Optional[str] = None
+
     # ── API Key header ──────────────────────────────────────────────
 
     @property
@@ -135,7 +138,46 @@ class PredictAuth:
         self.jwt_token = body["data"]["token"]
         self.jwt_expires_at = time.time() + 3500
         log.info("JWT token obtained successfully ✓")
+
+        # Fetch the Predict Account (smart wallet) address if one exists
+        self._fetch_predict_account()
+
         return self.jwt_token
+
+    def _fetch_predict_account(self) -> None:
+        """
+        Call GET /v1/account to find the Predict Account (smart wallet) address.
+        If the user created their account via the web app, USDT lives here —
+        not in the EOA wallet.
+        """
+        try:
+            resp = requests.get(
+                f"{self.api_base}/v1/account",
+                headers=self.jwt_headers,
+                timeout=10,
+            )
+            if resp.status_code == 200:
+                body = resp.json()
+                if body.get("success") and body.get("data"):
+                    addr = body["data"].get("address", "")
+                    if addr and addr.lower() != self.wallet_address.lower():
+                        self.predict_account_address = addr
+                        log.info(f"Predict Account (smart wallet): {addr}")
+                    else:
+                        log.info(f"Using EOA directly (no separate smart wallet): {self.wallet_address}")
+        except Exception as e:
+            log.warning(f"Could not fetch Predict Account info: {e}")
+
+    @property
+    def maker_address(self) -> str:
+        """The address that holds USDT and acts as order maker.
+        Uses Predict Account (smart wallet) if available, else EOA."""
+        return self.predict_account_address or self.wallet_address
+
+    @property
+    def signature_type(self) -> int:
+        """0 = EOA signer, 1 = contract wallet (Predict Account)."""
+        return 1 if self.predict_account_address else 0
 
     # ── EIP-712 Order Signing ────────────────────────────────────────
 
@@ -211,7 +253,14 @@ class PredictAuth:
         )
 
         sig_hex = "0x" + signed.signature.hex()
-        order_hash = "0x" + signed.messageHash.hex() if hasattr(signed, "messageHash") else ""
+
+        # Handle both attribute name conventions across eth-account versions:
+        #   - message_hash (snake_case, NamedTuple in eth-account >= 0.11)
+        #   - messageHash  (camelCase, older property-style)
+        msg_hash = getattr(signed, "message_hash", None)
+        if msg_hash is None:
+            msg_hash = getattr(signed, "messageHash", None)
+        order_hash = "0x" + msg_hash.hex() if msg_hash else ""
 
         # API payload uses string-encoded ints
         signed_order = {
@@ -230,7 +279,7 @@ class PredictAuth:
             "signature":     sig_hex,
         }
 
-        log.debug(f"Order signed: hash={order_hash[:20]}…")
+        log.debug(f"Order signed: hash={order_hash[:20]}… sig_type={sig_type}")
         return signed_order, order_hash
 
 
