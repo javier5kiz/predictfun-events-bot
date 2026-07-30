@@ -4,8 +4,7 @@ Price oracle for the Predict.fun Fast-Expiry Bot.
   - TARGET (strike) price  → variantData.startPrice from predict.fun  ✓
   - CURRENT (live) price   → Binance spot API (BTCUSDT ticker)
 
-predict.fun does not populate variantData.currentPrice in real-time via REST,
-so we use Binance for the live spot price comparison.
+Server must be outside US (e.g. Amsterdam) — Binance blocks US-based IPs (HTTP 451).
 """
 
 import time
@@ -17,7 +16,7 @@ from logger import get_logger
 
 log = get_logger("oracle")
 
-_CACHE_TTL       = 2.0   # seconds — how long to cache a Binance price
+_CACHE_TTL       = 2.0
 _BINANCE_API_URL = "https://api.binance.com"
 FIVE_MINUTES     = 300
 
@@ -25,12 +24,11 @@ FIVE_MINUTES     = 300
 class PriceFeedOracle:
     """
     Current price  → Binance spot (BTCUSDT or whichever symbol the market uses)
-    Target price   → variantData.startPrice (read by strategy directly)
+    Target price   → variantData.startPrice (read by strategy directly from predict.fun)
     """
 
     def __init__(self, predict_client=None):
-        # predict_client kept for interface compatibility, not used for price
-        self.client = predict_client
+        self.client = predict_client  # interface compat, not used for price
         # cache: symbol -> (price, fetched_at)
         self._cache: dict[str, tuple[float, float]] = {}
 
@@ -41,11 +39,7 @@ class PriceFeedOracle:
         provider: str = "CHAINLINK",
         pyth_feed_id: Optional[str] = None,
     ) -> Optional[float]:
-        """
-        Fetch the live spot price from Binance for the given symbol.
-        symbol is taken from variantData.priceFeedSymbol (e.g. "BTCUSDT").
-        """
-        # Resolve symbol from market_raw if provided
+        """Fetch the live spot price from Binance for the given symbol."""
         if market_raw is not None:
             vd = market_raw.get("variantData") or {}
             raw_sym = vd.get("priceFeedSymbol") or price_feed_symbol
@@ -54,7 +48,6 @@ class PriceFeedOracle:
 
         symbol = _normalise_binance_symbol(raw_sym)
 
-        # Cache hit
         cached = self._cache.get(symbol)
         if cached and time.time() - cached[1] < _CACHE_TTL:
             return cached[0]
@@ -114,8 +107,8 @@ def extract_market_price_context(market: dict) -> Optional[dict]:
     """
     Extract price context from a predict.fun CRYPTO_UP_DOWN market dict.
 
-    start_price  → variantData.startPrice  (predict.fun — the target/strike)
-    current_price is NOT extracted here; it comes from Binance via get_current_price().
+    start_price  → variantData.startPrice (predict.fun — the target/strike)
+    current_price comes from Binance spot via get_current_price().
     """
     if market.get("marketVariant") != "CRYPTO_UP_DOWN":
         return None
