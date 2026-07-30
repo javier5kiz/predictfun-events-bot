@@ -1,11 +1,11 @@
 """
 Strategy for the Predict.fun Fast-Expiry Bot.
 
-Uses ONLY predict.fun's own price data:
-  - variantData.startPrice   → the strike (set at market open)
-  - variantData.currentPrice → live price from predict.fun's Chainlink feed
+  - TARGET (strike) price  → variantData.startPrice  (predict.fun)
+  - CURRENT (live) price   → Binance spot via PriceFeedOracle
 
-No Binance. No external oracle. predict.fun is the single source of truth.
+predict.fun does not populate variantData.currentPrice via REST in real-time,
+so Binance spot is used as the live price source for comparison.
 """
 
 import time
@@ -42,16 +42,14 @@ class FastExpiryStrategy:
         return None
 
     def _evaluate_single(self, market_raw: dict) -> Optional[TradeSignal]:
-        # Extract both prices from predict.fun's own market data
         ctx = extract_market_price_context(market_raw)
         if ctx is None:
             return None
 
-        start_price = ctx["start_price"]   # strike — from variantData.startPrice
-        provider    = ctx["price_feed_provider"]   # should be "CHAINLINK"
+        start_price = ctx["start_price"]   # strike — from variantData.startPrice (predict.fun)
         symbol      = ctx["price_feed_symbol"]
+        provider    = ctx["price_feed_provider"]
 
-        # Check we're in the execution window
         expiry = _get_expiry(market_raw)
         if expiry is None:
             return None
@@ -62,17 +60,14 @@ class FastExpiryStrategy:
         if remaining <= 0:
             return None
 
-        # Get current price — exclusively from predict.fun's variantData.currentPrice
-        # (oracle will do a live refresh via PredictClient if currentPrice is missing)
+        # Live current price from Binance spot
         current_price = self.oracle.get_current_price(
             market_raw=market_raw,
             price_feed_symbol=symbol,
             provider=provider,
         )
         if current_price is None:
-            log.warning(
-                f"Market {market_raw.get('id')}: currentPrice unavailable from predict.fun — skip"
-            )
+            log.warning(f"Market {market_raw.get('id')}: Binance price unavailable — skip")
             return None
 
         diff     = current_price - start_price
@@ -90,8 +85,8 @@ class FastExpiryStrategy:
 
         log.warning(
             f"[LAST {remaining:.1f}s] "
-            f"BTC currentPrice=${current_price:.1f} (predict.fun/{provider}) | "
-            f"Strike=${start_price:.1f} | "
+            f"BTC spot=${current_price:.1f} (Binance) | "
+            f"Strike=${start_price:.1f} (predict.fun) | "
             f"Diff={diff:+.2f}"
         )
         log.warning(
