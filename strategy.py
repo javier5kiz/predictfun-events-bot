@@ -1,3 +1,13 @@
+"""
+Strategy for the Predict.fun Fast-Expiry Bot.
+
+Uses ONLY predict.fun's own price data:
+  - variantData.startPrice   → the strike (set at market open)
+  - variantData.currentPrice → live price from predict.fun's Chainlink feed
+
+No Binance. No external oracle. predict.fun is the single source of truth.
+"""
+
 import time
 from typing import Optional
 
@@ -18,6 +28,7 @@ class FastExpiryStrategy:
         self,
         markets_raw: dict[int, dict],
     ) -> Optional[TradeSignal]:
+        """Evaluate all markets, return the first valid signal (BTC only)."""
         for market_id, raw in markets_raw.items():
             vd = raw.get("variantData") or {}
             symbol = (vd.get("priceFeedSymbol") or "").upper()
@@ -31,12 +42,16 @@ class FastExpiryStrategy:
         return None
 
     def _evaluate_single(self, market_raw: dict) -> Optional[TradeSignal]:
+        # Extract both prices from predict.fun's own market data
         ctx = extract_market_price_context(market_raw)
         if ctx is None:
             return None
 
-        start_price = ctx["start_price"]
+        start_price = ctx["start_price"]   # strike — from variantData.startPrice
+        provider    = ctx["price_feed_provider"]   # should be "CHAINLINK"
+        symbol      = ctx["price_feed_symbol"]
 
+        # Check we're in the execution window
         expiry = _get_expiry(market_raw)
         if expiry is None:
             return None
@@ -47,38 +62,41 @@ class FastExpiryStrategy:
         if remaining <= 0:
             return None
 
+        # Get current price — exclusively from predict.fun's variantData.currentPrice
+        # (oracle will do a live refresh via PredictClient if currentPrice is missing)
         current_price = self.oracle.get_current_price(
-            price_feed_symbol=ctx["price_feed_symbol"],
-            provider=ctx["price_feed_provider"],
-            pyth_feed_id=ctx["price_feed_id"],
+            market_raw=market_raw,
+            price_feed_symbol=symbol,
+            provider=provider,
         )
         if current_price is None:
+            log.warning(
+                f"Market {market_raw.get('id')}: currentPrice unavailable from predict.fun — skip"
+            )
             return None
 
-        diff = current_price - start_price
+        diff     = current_price - start_price
         diff_abs = abs(diff)
 
         if diff_abs <= self.config.btc_threshold_usd:
             log.info(
-                f"|Δ|=${diff_abs:.2f} ≤ ${self.config.btc_threshold_usd} threshold — skip (too close)"
+                f"|Δ|=${diff_abs:.2f} ≤ ${self.config.btc_threshold_usd} threshold — "
+                f"skip (too close to strike)"
             )
             return None
 
-        if diff > 0:
-            outcome = "YES"
-            direction = "UP"
-        else:
-            outcome = "NO"
-            direction = "DOWN"
+        outcome   = "YES" if diff > 0 else "NO"
+        direction = "UP"  if diff > 0 else "DOWN"
 
         log.warning(
-            f"[LAST {remaining:.1f}s] BTC=${current_price:.1f} | "
+            f"[LAST {remaining:.1f}s] "
+            f"BTC currentPrice=${current_price:.1f} (predict.fun/{provider}) | "
             f"Strike=${start_price:.1f} | "
             f"Diff={diff:+.2f}"
         )
         log.warning(
-            f">>> SIGNAL {direction}: {diff:+.2f} — executing "
-            f"{self.config.account_allocation:.0%} BUY outcome={outcome.lower()} <<<"
+            f">>> SIGNAL {direction}: Δ={diff:+.2f} — "
+            f"executing {self.config.account_allocation:.0%} BUY {outcome.lower()} <<<"
         )
 
         return TradeSignal(
@@ -93,6 +111,8 @@ class FastExpiryStrategy:
             size_alloc=self.config.account_allocation,
         )
 
+
+# ── Expiry helpers ───────────────────────────────────────────────────
 
 def _get_expiry(market_raw: dict) -> Optional[float]:
     boost_ends = market_raw.get("boostEndsAt")
