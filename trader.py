@@ -21,12 +21,12 @@ def to_wei(value: float, decimals: int = SHARE_DECIMALS) -> str:
 class Trader:
     def __init__(self, config: Config, auth: PredictAuth, client: PredictClient):
         self.config = config
-        self.auth   = self.auth_ref = auth
+        self.auth   = auth
         self.client = client
 
     def execute_signal(self, signal: TradeSignal) -> Optional[tuple[str, str, str]]:
         # ── Fetch REAL on-chain USDT balance ──────────────────────────
-        wallet = self.auth_ref.wallet_address
+        wallet = self.auth.wallet_address
         if wallet:
             balance = self.client.get_usdt_balance(wallet)
             if balance is None or balance <= 0:
@@ -88,17 +88,12 @@ class Trader:
         """
         Find the on-chain token ID for a given outcome name (YES / NO).
 
-        predict.fun API returns token IDs under different field names
-        depending on the market variant:
-          - outcomes[].onChainId       (camelCase, most common)
-          - outcomes[].tokenId         (alternative)
-          - outcomes[].token_id        (snake_case variant)
-          - outcomes[].id              (fallback)
+        Predict.fun returns token IDs in the outcomes array, typically
+        under the `onChainId` field. We also check alternative field names
+        and variantData.outcomes as a secondary source.
 
-        Also checks variantData.outcomes as a secondary source.
-
-        If outcome names don't match exactly, falls back to index-based
-        lookup (first outcome = YES, second = NO).
+        For binary markets where outcome names are empty or don't match,
+        falls back to index-based lookup (outcomes[0] = YES, outcomes[1] = NO).
         """
         target = outcome.upper().strip()
         outcomes = market_raw.get("outcomes", [])
@@ -134,53 +129,37 @@ class Trader:
                 log.debug(f"Token ID (variantData) for {outcome}: {token_id}")
                 return str(token_id)
 
-        # ── Pass 3: index-based fallback ──────────────────────────────
-        # For binary markets: outcomes[0] = YES, outcomes[1] = NO
-        if outcomes and len(outcomes) >= 2:
-            for o in outcomes:
-                token_id = (
-                    o.get("onChainId")
-                    or o.get("tokenId")
-                    or o.get("token_id")
-                    or o.get("id")
-                )
-                if not token_id:
-                    continue
-                o_name = (o.get("name") or o.get("label") or "").upper().strip()
-                if target == "YES" and o_name == "":
-                    log.debug(f"Token ID (index fallback YES): {token_id}")
-                    return str(token_id)
-                if target == "NO" and o_name == "":
-                    # skip to the second outcome
-                    continue
-
-            # If names are empty but we have exactly 2 outcomes, use index
-            if len(outcomes) == 2:
-                idx = 0 if target == "YES" else 1
-                o = outcomes[idx]
-                token_id = (
-                    o.get("onChainId")
-                    or o.get("tokenId")
-                    or o.get("token_id")
-                    or o.get("id")
-                )
-                if token_id:
-                    log.debug(f"Token ID (index fallback #{idx}): {token_id}")
-                    return str(token_id)
-
-        # ── Pass 4: check clobTokenIds at market level ────────────────
-        # Some Polymarket-style APIs return token IDs at the top level
-        clob_ids = market_raw.get("clobTokenIds") or market_raw.get("tokenIds")
-        if clob_ids and isinstance(clob_ids, list) and len(clob_ids) >= 2:
+        # ── Pass 3: index-based fallback for binary markets ───────────
+        # If we have exactly 2 outcomes, assume [0]=YES, [1]=NO
+        if len(outcomes) == 2:
             idx = 0 if target == "YES" else 1
-            if clob_ids[idx]:
-                log.debug(f"Token ID (clobTokenIds fallback): {clob_ids[idx]}")
-                return str(clob_ids[idx])
+            o = outcomes[idx]
+            token_id = (
+                o.get("onChainId")
+                or o.get("tokenId")
+                or o.get("token_id")
+                or o.get("id")
+            )
+            if token_id:
+                log.debug(f"Token ID (index fallback #{idx}): {token_id}")
+                return str(token_id)
+
+        # ── Pass 4: if only 1 outcome, use it ─────────────────────────
+        if len(outcomes) == 1:
+            token_id = (
+                outcomes[0].get("onChainId")
+                or outcomes[0].get("tokenId")
+                or outcomes[0].get("token_id")
+                or outcomes[0].get("id")
+            )
+            if token_id:
+                log.debug(f"Token ID (single outcome fallback): {token_id}")
+                return str(token_id)
 
         log.error(
             f"_get_token_id exhausted all strategies. "
             f"outcome={outcome}, outcomes_count={len(outcomes)}, "
-            f"outcome_names={[(o.get('name'), o.get('onChainId'), o.get('tokenId')) for o in outcomes]}"
+            f"outcome_data={[(o.get('name'), o.get('onChainId'), o.get('tokenId')) for o in outcomes]}"
         )
         return None
 
@@ -192,7 +171,7 @@ class Trader:
         outcome: str,
     ) -> Optional[str]:
         try:
-            self.auth_ref.ensure_jwt()
+            self.auth.ensure_jwt()
         except Exception as e:
             log.error(f"JWT auth failed: {e}")
             return None
@@ -205,8 +184,8 @@ class Trader:
         salt           = str(random.randint(1, 2 ** 63 - 1))
         expiration     = str(int(time.time()) + 30)
 
-        maker  = self.auth_ref.wallet_address
-        signer = self.auth_ref.wallet_address
+        maker  = self.auth.wallet_address
+        signer = self.auth.wallet_address
         taker  = "0x0000000000000000000000000000000000000000"
 
         order_data = {
@@ -225,7 +204,7 @@ class Trader:
         }
 
         try:
-            signed_order, order_hash = self.auth_ref.sign_order(
+            signed_order, order_hash = self.auth.sign_order(
                 order_data,
                 is_neg_risk=is_neg_risk,
                 is_yield_bearing=is_yield_bearing,
@@ -261,7 +240,7 @@ class Trader:
         try:
             resp = self.client.session.post(
                 f"{self.client.base_url}/v1/oauth/orders",
-                headers=self.auth_ref.jwt_headers,
+                headers=self.auth.jwt_headers,
                 json=body,
                 timeout=10,
             )
