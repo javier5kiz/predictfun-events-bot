@@ -10,7 +10,7 @@ from logger import get_logger
 
 log = get_logger("trader")
 
-USDT_DECIMALS = 6
+USDT_DECIMALS  = 6
 SHARE_DECIMALS = 18
 
 
@@ -19,14 +19,9 @@ def to_wei(value: float, decimals: int = SHARE_DECIMALS) -> str:
 
 
 class Trader:
-    def __init__(
-        self,
-        config: Config,
-        auth: PredictAuth,
-        client: PredictClient,
-    ):
+    def __init__(self, config: Config, auth: PredictAuth, client: PredictClient):
         self.config = config
-        self.auth = auth
+        self.auth   = auth
         self.client = client
 
     def execute_signal(self, signal: TradeSignal) -> Optional[tuple[str, str, str]]:
@@ -51,14 +46,22 @@ class Trader:
             f"balance=${balance:.4f}"
         )
 
+        # Always do a fresh market fetch so we get full outcomes with token IDs
         _, market_raw = self.client.get_market_with_raw(signal.market_id)
         if not market_raw:
             log.error(f"Market {signal.market_id} not found")
             return None
 
+        # Debug: log what outcomes look like so we can trace mismatches
+        outcomes_raw = market_raw.get("outcomes", [])
+        log.debug(f"Market {signal.market_id} outcomes raw: {outcomes_raw}")
+
         token_id = self._get_token_id(market_raw, signal.outcome)
         if not token_id:
-            log.error(f"Token ID not found for {signal.outcome} in market {signal.market_id}")
+            log.error(
+                f"Token ID not found for {signal.outcome} in market {signal.market_id}. "
+                f"Outcomes: {outcomes_raw}"
+            )
             return None
 
         order_hash = self._submit_market_fok(
@@ -71,6 +74,54 @@ class Trader:
             return None
 
         return order_hash, signal.outcome, f"{value_usdt:.1f}"
+
+    def _get_token_id(self, market_raw: dict, outcome: str) -> Optional[str]:
+        """
+        Find the on-chain token ID for a given outcome name (YES / NO).
+
+        predict.fun API may return token IDs under different field names:
+          - outcomes[].onChainId       (camelCase)
+          - outcomes[].tokenId         (alternative)
+          - outcomes[].token_id        (snake_case variant)
+          - outcomes[].id              (fallback)
+
+        Outcome name matching is case-insensitive.
+        """
+        target = outcome.upper().strip()
+
+        for o in market_raw.get("outcomes", []):
+            name = (o.get("name") or o.get("label") or "").upper().strip()
+            if name != target:
+                continue
+
+            # Try all known token ID field names
+            token_id = (
+                o.get("onChainId")
+                or o.get("tokenId")
+                or o.get("token_id")
+                or o.get("id")
+            )
+            if token_id:
+                log.debug(f"Token ID for {outcome}: {token_id}")
+                return str(token_id)
+
+        # Second pass: try variantData.outcomes if top-level outcomes is empty
+        vd = market_raw.get("variantData") or {}
+        for o in vd.get("outcomes", []):
+            name = (o.get("name") or o.get("label") or "").upper().strip()
+            if name != target:
+                continue
+            token_id = (
+                o.get("onChainId")
+                or o.get("tokenId")
+                or o.get("token_id")
+                or o.get("id")
+            )
+            if token_id:
+                log.debug(f"Token ID (variantData) for {outcome}: {token_id}")
+                return str(token_id)
+
+        return None
 
     def _submit_market_fok(
         self,
@@ -85,30 +136,30 @@ class Trader:
             log.error(f"JWT auth failed: {e}")
             return None
 
-        fee_bps = market_raw.get("feeRateBps", 0)
-        is_neg_risk = market_raw.get("isNegRisk", False)
+        fee_bps          = market_raw.get("feeRateBps", 0)
+        is_neg_risk      = market_raw.get("isNegRisk", False)
         is_yield_bearing = market_raw.get("isYieldBearing", False)
 
         value_usdt_wei = to_wei(value_usdt, USDT_DECIMALS)
-        salt = str(random.randint(1, 2 ** 63 - 1))
-        expiration = str(int(time.time()) + 30)
+        salt           = str(random.randint(1, 2 ** 63 - 1))
+        expiration     = str(int(time.time()) + 30)
 
-        maker = self.auth.wallet_address
+        maker  = self.auth.wallet_address
         signer = self.auth.wallet_address
-        taker = "0x0000000000000000000000000000000000000000"
+        taker  = "0x0000000000000000000000000000000000000000"
 
         order_data = {
-            "salt": salt,
-            "maker": maker,
-            "signer": signer,
-            "taker": taker,
-            "tokenId": str(token_id),
-            "makerAmount": value_usdt_wei,
-            "takerAmount": value_usdt_wei,
-            "expiration": expiration,
-            "nonce": "0",
-            "feeRateBps": str(fee_bps),
-            "side": 0,
+            "salt":          salt,
+            "maker":         maker,
+            "signer":        signer,
+            "taker":         taker,
+            "tokenId":       str(token_id),
+            "makerAmount":   value_usdt_wei,
+            "takerAmount":   value_usdt_wei,
+            "expiration":    expiration,
+            "nonce":         "0",
+            "feeRateBps":    str(fee_bps),
+            "side":          0,
             "signatureType": 0,
         }
 
@@ -125,24 +176,24 @@ class Trader:
         body = {
             "data": {
                 "order": {
-                    "hash": order_hash,
-                    "salt": signed_order["salt"],
-                    "maker": maker,
-                    "signer": signer,
-                    "taker": taker,
-                    "tokenId": str(token_id),
-                    "makerAmount": signed_order["makerAmount"],
-                    "takerAmount": signed_order["takerAmount"],
-                    "expiration": signed_order["expiration"],
-                    "nonce": signed_order["nonce"],
-                    "feeRateBps": signed_order["feeRateBps"],
-                    "side": signed_order["side"],
+                    "hash":          order_hash,
+                    "salt":          signed_order["salt"],
+                    "maker":         maker,
+                    "signer":        signer,
+                    "taker":         taker,
+                    "tokenId":       str(token_id),
+                    "makerAmount":   signed_order["makerAmount"],
+                    "takerAmount":   signed_order["takerAmount"],
+                    "expiration":    signed_order["expiration"],
+                    "nonce":         signed_order["nonce"],
+                    "feeRateBps":    signed_order["feeRateBps"],
+                    "side":          signed_order["side"],
                     "signatureType": signed_order["signatureType"],
-                    "signature": signed_order["signature"],
+                    "signature":     signed_order["signature"],
                 },
                 "pricePerShare": "1",
-                "strategy": "MARKET",
-                "slippageBps": "10000",
+                "strategy":      "MARKET",
+                "slippageBps":   "10000",
             }
         }
 
@@ -153,7 +204,6 @@ class Trader:
                 json=body,
                 timeout=10,
             )
-
             if resp.status_code in (200, 201):
                 result = resp.json()
                 if result.get("success"):
@@ -168,17 +218,8 @@ class Trader:
                     log.error(f"Order failed: {result}")
                     return None
             else:
-                log.error(
-                    f"Order HTTP {resp.status_code}: {resp.text[:200]}"
-                )
+                log.error(f"Order HTTP {resp.status_code}: {resp.text[:300]}")
                 return None
-
         except Exception as e:
             log.error(f"Order submission error: {e}")
             return None
-
-    def _get_token_id(self, market_raw: dict, outcome: str) -> Optional[str]:
-        for o in market_raw.get("outcomes", []):
-            if o.get("name", "").upper() == outcome.upper():
-                return o.get("onChainId", "")
-        return None
