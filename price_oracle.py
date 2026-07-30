@@ -1,3 +1,18 @@
+"""
+Price oracle for the Predict.fun Fast-Expiry Bot.
+
+ALL price data comes from predict.fun's own API — no Binance, no external exchange.
+
+For CRYPTO_UP_DOWN markets, predict.fun stores everything we need in variantData:
+  - variantData.startPrice     → the strike / reference price set at market creation
+  - variantData.currentPrice   → the live price as tracked by predict.fun itself
+  - variantData.priceFeedSymbol  → e.g. "BTCUSDT"
+  - variantData.priceFeedProvider → "CHAINLINK" (predict.fun uses Chainlink on BNB Chain)
+
+We read BOTH prices directly from the market data returned by predict.fun's REST API.
+No external API calls for price — predict.fun is the single source of truth.
+"""
+
 import time
 import logging
 from typing import Optional
@@ -8,106 +23,125 @@ from logger import get_logger
 
 log = get_logger("oracle")
 
+# How long to cache a price fetch (seconds)
+_CACHE_TTL = 2.0
+
 
 class PriceFeedOracle:
     """
-    Fetches live spot prices from the provider predict.fun uses
-    for a given CRYPTO_UP_DOWN market (Binance, Pyth, or Chainlink).
+    Fetches target price (startPrice) and current price (currentPrice)
+    exclusively from predict.fun's own market data.
+
+    The optional predict_client reference allows the oracle to do a live
+    refresh of a single market if currentPrice is stale or missing.
     """
 
-    def __init__(
-        self,
-        binance_api_url: str = "https://api.binance.com",
-        pyth_api_url: str = "https://hermes.pyth.network",
-    ):
-        self.binance_api_url = binance_api_url
-        self.pyth_api_url = pyth_api_url
-        self._cache: dict[str, tuple[float, float]] = {}
-        self._cache_ttl = 2.0
+    def __init__(self, predict_client=None):
+        """
+        Args:
+            predict_client: optional PredictClient instance for live market refreshes.
+                            If None, we rely on whatever price is in the market_raw dict.
+        """
+        self.client = predict_client
+        # cache: market_id -> (current_price, fetched_at)
+        self._cache: dict[int, tuple[float, float]] = {}
+
+    def get_prices_from_market(self, market_raw: dict) -> tuple[Optional[float], Optional[float]]:
+        """
+        Extract startPrice (strike) and currentPrice from a predict.fun market dict.
+
+        Returns:
+            (start_price, current_price) — both float or None if missing.
+
+        predict.fun sets:
+          variantData.startPrice   = price at market open (the strike)
+          variantData.currentPrice = live price updated by predict.fun's Chainlink feed
+        """
+        vd = market_raw.get("variantData") or {}
+        if not isinstance(vd, dict):
+            return None, None
+
+        raw_start = vd.get("startPrice")
+        raw_current = vd.get("currentPrice")
+
+        start_price = float(raw_start) if raw_start is not None else None
+        current_price = float(raw_current) if raw_current is not None else None
+
+        return start_price, current_price
 
     def get_current_price(
         self,
-        price_feed_symbol: str,
-        provider: str = "BINANCE",
+        market_raw: dict,
+        price_feed_symbol: str = "",
+        provider: str = "CHAINLINK",
         pyth_feed_id: Optional[str] = None,
     ) -> Optional[float]:
-        cache_key = f"{provider}:{price_feed_symbol}"
-        cached = self._cache.get(cache_key)
-        if cached and time.time() - cached[1] < self._cache_ttl:
-            return cached[0]
+        """
+        Get the live current price for a market — from predict.fun's own data only.
 
-        price = None
-        if provider == "BINANCE":
-            price = self._fetch_binance(price_feed_symbol)
-        elif provider == "PYTH":
-            price = self._fetch_pyth(pyth_feed_id or price_feed_symbol)
-        elif provider == "CHAINLINK":
-            binance_sym = _pyth_to_binance_symbol(price_feed_symbol)
-            price = self._fetch_binance(binance_sym)
-        else:
-            price = self._fetch_binance(price_feed_symbol)
+        Priority:
+          1. variantData.currentPrice in market_raw (freshest if just fetched)
+          2. Live refresh via PredictClient.get_market_with_raw() if client is set
+          3. None — log a warning
 
-        if price is not None:
-            self._cache[cache_key] = (price, time.time())
+        The provider/symbol/pyth_feed_id args are accepted for interface compatibility
+        but are NOT used to call any external API.
+        """
+        market_id = market_raw.get("id")
 
-        return price
+        # Check cache first
+        if market_id is not None:
+            cached = self._cache.get(market_id)
+            if cached and time.time() - cached[1] < _CACHE_TTL:
+                return cached[0]
 
-    def _fetch_binance(self, symbol: str) -> Optional[float]:
-        symbol = _normalise_binance_symbol(symbol)
-        try:
-            resp = requests.get(
-                f"{self.binance_api_url}/api/v3/ticker/price",
-                params={"symbol": symbol},
-                timeout=5,
+        # Read currentPrice from the dict we already have
+        _, current_price = self.get_prices_from_market(market_raw)
+
+        if current_price is not None and current_price > 0:
+            log.debug(
+                f"predict.fun currentPrice for market {market_id}: "
+                f"${current_price:,.2f} (provider={provider})"
             )
-            resp.raise_for_status()
-            price = float(resp.json()["price"])
-            log.debug(f"Binance {symbol}: ${price:,.4f}")
-            return price
-        except Exception as e:
-            log.error(f"Binance price fetch failed ({symbol}): {e}")
-            return None
+            if market_id is not None:
+                self._cache[market_id] = (current_price, time.time())
+            return current_price
 
-    def _fetch_pyth(self, feed_id_or_symbol: str) -> Optional[float]:
-        if len(feed_id_or_symbol) > 20:
-            feed_id = feed_id_or_symbol
-            if not feed_id.startswith("0x"):
-                feed_id = "0x" + feed_id
-        else:
-            return self._fetch_binance(feed_id_or_symbol)
+        # currentPrice missing — try a live refresh if we have a client
+        if self.client is not None and market_id is not None:
+            try:
+                _, refreshed_raw = self.client.get_market_with_raw(market_id)
+                if refreshed_raw:
+                    _, current_price = self.get_prices_from_market(refreshed_raw)
+                    if current_price and current_price > 0:
+                        log.debug(
+                            f"Refreshed currentPrice for market {market_id}: "
+                            f"${current_price:,.2f}"
+                        )
+                        self._cache[market_id] = (current_price, time.time())
+                        return current_price
+            except Exception as e:
+                log.warning(f"Market refresh failed for {market_id}: {e}")
 
-        try:
-            resp = requests.get(
-                f"{self.pyth_api_url}/v2/updates/price/latest",
-                params={"ids[]": feed_id},
-                timeout=5,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-            parsed = data.get("parsed", [])
-            if parsed:
-                price_data = parsed[0].get("price", {})
-                price = float(price_data.get("price", 0))
-                expo = int(price_data.get("expo", 0))
-                actual_price = price * (10 ** expo)
-                log.debug(f"Pyth {feed_id[:20]}…: ${actual_price:,.4f}")
-                return actual_price
-        except Exception as e:
-            log.error(f"Pyth price fetch failed ({feed_id[:20]}…): {e}")
+        log.warning(
+            f"No currentPrice available for market {market_id} "
+            f"(symbol={price_feed_symbol}, provider={provider})"
+        )
         return None
 
+    def invalidate(self, market_id: int):
+        """Force a fresh fetch on next call for this market."""
+        self._cache.pop(market_id, None)
+
+
+# ── Helpers used by strategy.py ─────────────────────────────────────
 
 FIVE_MINUTES = 300
 
 
 def is_five_minute_market(market_raw: dict) -> bool:
     """
-    Strict check: returns True only if this is a 5-minute expiry market.
-
-    Checks multiple signals:
-      1. Question text contains '5 minute' or '5 min'
-      2. variantData has duration=300
-      3. (closeTime - startTime) == 300
+    Returns True only if this is a 5-minute expiry CRYPTO_UP_DOWN market.
     """
     vd = market_raw.get("variantData") or {}
     if not isinstance(vd, dict):
@@ -133,41 +167,36 @@ def is_five_minute_market(market_raw: dict) -> bool:
     return False
 
 
-def _normalise_binance_symbol(symbol: str) -> str:
-    symbol = symbol.upper().replace("/", "").replace("_", "").replace("-", "")
-    if symbol.endswith("USD") and not symbol.endswith("USDT"):
-        symbol = symbol[:-3] + "USDT"
-    return symbol
-
-
-def _pyth_to_binance_symbol(pyth_symbol: str) -> str:
-    return _normalise_binance_symbol(pyth_symbol)
-
-
 def extract_market_price_context(market: dict) -> Optional[dict]:
     """
-    Extract price oracle context from a predict.fun CRYPTO_UP_DOWN market dict.
+    Extract price context from a predict.fun CRYPTO_UP_DOWN market dict.
 
     Returns:
-      - start_price: float (predict.fun's reference price)
-      - price_feed_symbol: str (e.g. "BTCUSDT")
-      - price_feed_provider: str ("BINANCE", "PYTH", "CHAINLINK")
-      - price_feed_id: str | None
+      - start_price:          float  — strike price from variantData.startPrice
+      - current_price:        float | None — live price from variantData.currentPrice
+      - price_feed_symbol:    str    — e.g. "BTCUSDT"
+      - price_feed_provider:  str    — "CHAINLINK" (predict.fun's oracle on BNB Chain)
+      - price_feed_id:        str | None — Chainlink/Pyth feed ID if present
+
+    Returns None if this is not a CRYPTO_UP_DOWN market or startPrice is missing.
     """
     if market.get("marketVariant") != "CRYPTO_UP_DOWN":
         return None
 
-    variant_data = market.get("variantData") or {}
-    if not isinstance(variant_data, dict):
+    vd = market.get("variantData") or {}
+    if not isinstance(vd, dict):
         return None
 
-    start_price = variant_data.get("startPrice")
+    start_price = vd.get("startPrice")
     if start_price is None:
         return None
 
+    current_price_raw = vd.get("currentPrice")
+
     return {
-        "start_price": float(start_price),
-        "price_feed_symbol": variant_data.get("priceFeedSymbol", "BTCUSDT"),
-        "price_feed_provider": variant_data.get("priceFeedProvider", "BINANCE"),
-        "price_feed_id": variant_data.get("priceFeedId"),
+        "start_price":         float(start_price),
+        "current_price":       float(current_price_raw) if current_price_raw is not None else None,
+        "price_feed_symbol":   vd.get("priceFeedSymbol", "BTCUSDT"),
+        "price_feed_provider": vd.get("priceFeedProvider", "CHAINLINK"),
+        "price_feed_id":       vd.get("priceFeedId"),
     }
