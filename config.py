@@ -26,8 +26,8 @@ class Config:
 
     # ── Strategy ─────────────────────────────────────────────────────
     # Minimum absolute BTC price move from startPrice to trigger a trade.
-    # ±$50 means: only trade if BTC has moved at least $50 from the strike.
-    btc_threshold_usd: float = float(os.getenv("BTC_THRESHOLD_USD", "50"))
+    # ±$65 means: only trade if BTC has moved at least $65 from the strike.
+    btc_threshold_usd: float = float(os.getenv("BTC_THRESHOLD_USD", "65"))
     execution_window_seconds: float = float(os.getenv("EXECUTION_WINDOW_SECONDS", "2.0"))
     account_allocation: float = float(os.getenv("ACCOUNT_ALLOCATION", "0.80"))
     max_position_usdt: float = float(os.getenv("MAX_POSITION_USDT", "100"))
