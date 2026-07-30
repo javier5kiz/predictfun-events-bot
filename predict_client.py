@@ -8,6 +8,7 @@ import logging
 from typing import Optional, Any
 
 import requests
+from web3 import Web3
 
 from config import Config
 from auth import PredictAuth
@@ -15,6 +16,10 @@ from models import Market, MarketStats, OrderStatus, OrderStrategy
 from logger import get_logger
 
 log = get_logger("predict_client")
+
+# USDT contract on BNB Mainnet (6 decimals)
+_USDT_CONTRACT = "0x55d398326f99059fF775485246999027B3197955"
+_BALANCEOF_ABI = [{"constant": True, "inputs": [{"name": "account", "type": "address"}], "name": "balanceOf", "outputs": [{"name": "", "type": "uint256"}], "payable": False, "stateMutability": "view", "type": "function"}]
 
 
 class PredictClient:
@@ -25,6 +30,7 @@ class PredictClient:
         self.auth = auth
         self.base_url = config.api_base_url
         self.session = requests.Session()
+        self._w3 = Web3(Web3.HTTPProvider(config.rpc_provider_url))
 
     # ── Markets ──────────────────────────────────────────────────────
 
@@ -36,10 +42,6 @@ class PredictClient:
         first: int = 50,
         after: Optional[str] = None,
     ) -> tuple[list[Market], Optional[str]]:
-        """
-        GET /v1/markets — list markets with optional filters.
-        Returns (markets, cursor) for pagination.
-        """
         params = {"status": status, "first": str(first)}
         if market_variant:
             params["marketVariant"] = market_variant
@@ -74,10 +76,6 @@ class PredictClient:
         first: int = 50,
         after: Optional[str] = None,
     ) -> tuple[list[Market], list[dict], Optional[str]]:
-        """
-        Same as get_markets but also returns the raw dicts (with variantData).
-        Returns (markets, raw_dicts, cursor).
-        """
         params = {"status": status, "first": str(first)}
         if market_variant:
             params["marketVariant"] = market_variant
@@ -110,7 +108,6 @@ class PredictClient:
         sort: Optional[str] = None,
         max_pages: int = 20,
     ) -> tuple[list[Market], list[dict]]:
-        """Paginate through all markets, returning both parsed and raw dicts."""
         all_markets: list[Market] = []
         all_raws: list[dict] = []
         cursor = None
@@ -131,7 +128,6 @@ class PredictClient:
         return all_markets, all_raws
 
     def get_market(self, market_id: int) -> Optional[Market]:
-        """GET /v1/markets/{id} — single market details."""
         resp = self.session.get(
             f"{self.base_url}/v1/markets/{market_id}",
             headers=self.auth.api_headers,
@@ -144,7 +140,6 @@ class PredictClient:
         return None
 
     def get_market_with_raw(self, market_id: int) -> tuple[Optional[Market], Optional[dict]]:
-        """GET /v1/markets/{id} — returns both parsed model and raw dict."""
         resp = self.session.get(
             f"{self.base_url}/v1/markets/{market_id}",
             headers=self.auth.api_headers,
@@ -158,7 +153,6 @@ class PredictClient:
         return None, None
 
     def get_market_stats(self, market_id: int) -> Optional[MarketStats]:
-        """GET /v1/markets/{id}/stats — market statistics."""
         resp = self.session.get(
             f"{self.base_url}/v1/markets/{market_id}/stats",
             headers=self.auth.api_headers,
@@ -177,7 +171,6 @@ class PredictClient:
         return None
 
     def get_orderbook(self, market_id: int) -> Optional[dict]:
-        """GET /v1/markets/{marketId}/orderbook — orderbook snapshot."""
         resp = self.session.get(
             f"{self.base_url}/v1/markets/{market_id}/orderbook",
             headers=self.auth.api_headers,
@@ -192,7 +185,6 @@ class PredictClient:
     # ── Orders ───────────────────────────────────────────────────────
 
     def get_orders(self, status: Optional[str] = None, first: int = 50) -> list[dict]:
-        """GET /v1/orders — list your own orders."""
         self.auth.ensure_jwt()
         params = {"first": str(first)}
         if status:
@@ -211,7 +203,6 @@ class PredictClient:
         return []
 
     def get_order(self, order_hash: str) -> Optional[dict]:
-        """GET /v1/orders/{hash} — single order details."""
         self.auth.ensure_jwt()
         resp = self.session.get(
             f"{self.base_url}/v1/orders/{order_hash}",
@@ -225,7 +216,6 @@ class PredictClient:
         return None
 
     def cancel_order(self, order_hash: str, is_neg_risk: bool, is_yield_bearing: bool) -> bool:
-        """Cancel an open order. DELETE /v1/orders/{hash}."""
         self.auth.ensure_jwt()
         log.info(f"Cancelling order {order_hash} (negRisk={is_neg_risk})")
         try:
@@ -252,7 +242,6 @@ class PredictClient:
         min_value_usdt_wei: Optional[str] = None,
         first: int = 50,
     ) -> list[dict]:
-        """GET /v1/orders/matches — order match events."""
         self.auth.ensure_jwt()
         params = {"first": str(first)}
         if market_id:
@@ -277,7 +266,6 @@ class PredictClient:
     # ── Positions ────────────────────────────────────────────────────
 
     def get_positions(self) -> list[dict]:
-        """GET /v1/oauth/positions — your current positions."""
         self.auth.ensure_jwt()
         resp = self.session.get(
             f"{self.base_url}/v1/oauth/positions",
@@ -290,14 +278,44 @@ class PredictClient:
             return body.get("data", [])
         return []
 
-    # ── Portfolio / Balance ──────────────────────────────────────────
+    # ── Balance (on-chain via USDT balanceOf) ─────────────────────────
 
-    def get_portfolio(self) -> Optional[dict]:
-        """GET /v1/oauth/portfolio — account balance & portfolio summary."""
+    def get_usdt_balance(self, wallet_address: str) -> Optional[float]:
+        """
+        Fetch the real USDT balance on BNB Mainnet by calling
+        balanceOf on the USDT contract directly.
+
+        The Predict.fun REST API does not expose a portfolio/balance
+        endpoint — the balance lives on-chain.
+        """
+        try:
+            if not wallet_address:
+                log.warning("Cannot fetch balance: no wallet address")
+                return None
+
+            contract = self._w3.eth.contract(
+                address=Web3.to_checksum_address(_USDT_CONTRACT),
+                abi=_BALANCEOF_ABI,
+            )
+            raw_balance = contract.functions.balanceOf(
+                Web3.to_checksum_address(wallet_address)
+            ).call()
+            # USDT on BSC uses 6 decimals
+            balance = raw_balance / (10 ** 6)
+            log.info(f"USDT balance: {balance:.2f} (raw={raw_balance})")
+            return balance
+        except Exception as e:
+            log.error(f"Failed to fetch USDT balance on-chain: {e}")
+            return None
+
+    # ── Account ──────────────────────────────────────────────────────
+
+    def get_account(self) -> Optional[dict]:
+        """GET /v1/account — connected account info (name, address, points)."""
         try:
             self.auth.ensure_jwt()
             resp = self.session.get(
-                f"{self.base_url}/v1/oauth/portfolio",
+                f"{self.base_url}/v1/account",
                 headers=self.auth.jwt_headers,
                 timeout=10,
             )
@@ -306,7 +324,7 @@ class PredictClient:
             if body.get("success"):
                 return body.get("data")
         except Exception as e:
-            log.debug(f"Portfolio fetch failed: {e}")
+            log.debug(f"Account fetch failed: {e}")
         return None
 
     # ── Health ──────────────────────────────────────────────────────

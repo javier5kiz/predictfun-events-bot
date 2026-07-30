@@ -21,23 +21,32 @@ def to_wei(value: float, decimals: int = SHARE_DECIMALS) -> str:
 class Trader:
     def __init__(self, config: Config, auth: PredictAuth, client: PredictClient):
         self.config = config
-        self.auth   = auth
+        self.auth   = self.auth_ref = auth
         self.client = client
 
     def execute_signal(self, signal: TradeSignal) -> Optional[tuple[str, str, str]]:
-        portfolio = self.client.get_portfolio()
-        if portfolio:
-            balance = float(
-                portfolio.get("usdBalance")
-                or portfolio.get("balance")
-                or portfolio.get("availableBalance")
-                or 0
-            )
+        # ── Fetch REAL on-chain USDT balance ──────────────────────────
+        wallet = self.auth_ref.wallet_address
+        if wallet:
+            balance = self.client.get_usdt_balance(wallet)
+            if balance is None or balance <= 0:
+                log.warning(f"Could not fetch on-chain USDT balance for {wallet}, "
+                            f"using config default ${self.config.max_position_usdt:.2f}")
+                balance = self.config.max_position_usdt
+            else:
+                log.info(f"Real USDT balance: ${balance:.2f}")
         else:
+            log.warning("No wallet address configured, using default balance")
             balance = self.config.max_position_usdt
-            log.warning(f"Could not fetch balance, using default ${balance:.2f}")
 
         value_usdt = balance * signal.size_alloc
+        if value_usdt < 1.0:
+            log.warning(
+                f"Position size too small: ${value_usdt:.2f} "
+                f"(balance=${balance:.2f} alloc={signal.size_alloc:.0%}). Skipping."
+            )
+            return None
+
         log.warning(
             f"EXECUTING: marketId={signal.market_id} | "
             f"outcome={signal.outcome} | "
@@ -79,22 +88,26 @@ class Trader:
         """
         Find the on-chain token ID for a given outcome name (YES / NO).
 
-        predict.fun API may return token IDs under different field names:
-          - outcomes[].onChainId       (camelCase)
+        predict.fun API returns token IDs under different field names
+        depending on the market variant:
+          - outcomes[].onChainId       (camelCase, most common)
           - outcomes[].tokenId         (alternative)
           - outcomes[].token_id        (snake_case variant)
           - outcomes[].id              (fallback)
 
-        Outcome name matching is case-insensitive.
+        Also checks variantData.outcomes as a secondary source.
+
+        If outcome names don't match exactly, falls back to index-based
+        lookup (first outcome = YES, second = NO).
         """
         target = outcome.upper().strip()
+        outcomes = market_raw.get("outcomes", [])
 
-        for o in market_raw.get("outcomes", []):
+        # ── Pass 1: match by name ─────────────────────────────────────
+        for o in outcomes:
             name = (o.get("name") or o.get("label") or "").upper().strip()
             if name != target:
                 continue
-
-            # Try all known token ID field names
             token_id = (
                 o.get("onChainId")
                 or o.get("tokenId")
@@ -105,7 +118,7 @@ class Trader:
                 log.debug(f"Token ID for {outcome}: {token_id}")
                 return str(token_id)
 
-        # Second pass: try variantData.outcomes if top-level outcomes is empty
+        # ── Pass 2: variantData.outcomes ──────────────────────────────
         vd = market_raw.get("variantData") or {}
         for o in vd.get("outcomes", []):
             name = (o.get("name") or o.get("label") or "").upper().strip()
@@ -121,6 +134,54 @@ class Trader:
                 log.debug(f"Token ID (variantData) for {outcome}: {token_id}")
                 return str(token_id)
 
+        # ── Pass 3: index-based fallback ──────────────────────────────
+        # For binary markets: outcomes[0] = YES, outcomes[1] = NO
+        if outcomes and len(outcomes) >= 2:
+            for o in outcomes:
+                token_id = (
+                    o.get("onChainId")
+                    or o.get("tokenId")
+                    or o.get("token_id")
+                    or o.get("id")
+                )
+                if not token_id:
+                    continue
+                o_name = (o.get("name") or o.get("label") or "").upper().strip()
+                if target == "YES" and o_name == "":
+                    log.debug(f"Token ID (index fallback YES): {token_id}")
+                    return str(token_id)
+                if target == "NO" and o_name == "":
+                    # skip to the second outcome
+                    continue
+
+            # If names are empty but we have exactly 2 outcomes, use index
+            if len(outcomes) == 2:
+                idx = 0 if target == "YES" else 1
+                o = outcomes[idx]
+                token_id = (
+                    o.get("onChainId")
+                    or o.get("tokenId")
+                    or o.get("token_id")
+                    or o.get("id")
+                )
+                if token_id:
+                    log.debug(f"Token ID (index fallback #{idx}): {token_id}")
+                    return str(token_id)
+
+        # ── Pass 4: check clobTokenIds at market level ────────────────
+        # Some Polymarket-style APIs return token IDs at the top level
+        clob_ids = market_raw.get("clobTokenIds") or market_raw.get("tokenIds")
+        if clob_ids and isinstance(clob_ids, list) and len(clob_ids) >= 2:
+            idx = 0 if target == "YES" else 1
+            if clob_ids[idx]:
+                log.debug(f"Token ID (clobTokenIds fallback): {clob_ids[idx]}")
+                return str(clob_ids[idx])
+
+        log.error(
+            f"_get_token_id exhausted all strategies. "
+            f"outcome={outcome}, outcomes_count={len(outcomes)}, "
+            f"outcome_names={[(o.get('name'), o.get('onChainId'), o.get('tokenId')) for o in outcomes]}"
+        )
         return None
 
     def _submit_market_fok(
@@ -131,7 +192,7 @@ class Trader:
         outcome: str,
     ) -> Optional[str]:
         try:
-            self.auth.ensure_jwt()
+            self.auth_ref.ensure_jwt()
         except Exception as e:
             log.error(f"JWT auth failed: {e}")
             return None
@@ -144,8 +205,8 @@ class Trader:
         salt           = str(random.randint(1, 2 ** 63 - 1))
         expiration     = str(int(time.time()) + 30)
 
-        maker  = self.auth.wallet_address
-        signer = self.auth.wallet_address
+        maker  = self.auth_ref.wallet_address
+        signer = self.auth_ref.wallet_address
         taker  = "0x0000000000000000000000000000000000000000"
 
         order_data = {
@@ -164,7 +225,7 @@ class Trader:
         }
 
         try:
-            signed_order, order_hash = self.auth.sign_order(
+            signed_order, order_hash = self.auth_ref.sign_order(
                 order_data,
                 is_neg_risk=is_neg_risk,
                 is_yield_bearing=is_yield_bearing,
@@ -200,7 +261,7 @@ class Trader:
         try:
             resp = self.client.session.post(
                 f"{self.client.base_url}/v1/oauth/orders",
-                headers=self.auth.jwt_headers,
+                headers=self.auth_ref.jwt_headers,
                 json=body,
                 timeout=10,
             )
