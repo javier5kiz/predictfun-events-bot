@@ -1,7 +1,5 @@
 import asyncio
-import argparse
 import signal
-import sys
 import time
 
 from config import Config
@@ -18,9 +16,8 @@ log = get_logger("bot")
 
 
 class PredictBot:
-    def __init__(self, config: Config, dry_run: bool = False):
+    def __init__(self, config: Config):
         self.config = config
-        self.dry_run = dry_run
         self.running = False
 
         self.auth = PredictAuth(config)
@@ -39,7 +36,7 @@ class PredictBot:
         print("=== BOT STARTING ===", flush=True)
         log.info("=" * 60)
         log.info("  Predict.fun Fast-Expiry Bot — OKX-style")
-        log.info(f"  Mode: {'DRY RUN' if self.dry_run else 'LIVE'}")
+        log.info(f"  Mode: LIVE")
         log.info(f"  API: {self.config.api_base_url}")
         log.info(f"  Wallet: {self.auth.wallet_address or 'NOT CONFIGURED'}")
         log.info(f"  BTC threshold: ±${self.config.btc_threshold_usd}")
@@ -50,23 +47,22 @@ class PredictBot:
         self.keepalive.start()
 
         errors = self.config.validate()
-        if errors and not self.dry_run:
+        if errors:
             for e in errors:
                 log.error(f"Config error: {e}")
-            log.error("Fix config errors before running in LIVE mode")
+            log.error("Fix config errors before running")
             return
 
         self.running = True
 
-        if self.auth.wallet_private_key and not self.dry_run:
-            try:
-                self.auth.ensure_jwt()
-                log.info("Authentication successful")
-            except Exception as e:
-                log.error(f"Authentication failed: {e}")
-                if not self.config.is_testnet:
-                    return
-                log.warning("Continuing in read-only mode (testnet)")
+        try:
+            self.auth.ensure_jwt()
+            log.info("Authentication successful")
+        except Exception as e:
+            log.error(f"Authentication failed: {e}")
+            if not self.config.is_testnet:
+                return
+            log.warning("Continuing in read-only mode (testnet)")
 
         try:
             await self._trading_loop()
@@ -126,18 +122,11 @@ class PredictBot:
         if signal is None:
             return
 
-        if self.dry_run:
-            log.info(
-                f"[DRY RUN] Would MARKET FOK: market={signal.market_id} "
-                f"outcome={signal.outcome} alloc={signal.size_alloc:.0%}"
-            )
-            return
-
         result = self.trader.execute_signal(signal)
         if result:
             order_id, outcome, sz = result
             log.warning(f"EXECUTING: marketId={signal.market_id} | outcome={outcome} | sz={sz}")
-            log.warning(f">>> SENDING ORDER: {{{{...}}}}")
+            log.warning(f">>> SENDING ORDER: {{...}}")
             log.info(f"ORDER PLACED — ordId={order_id} outcome={outcome.lower()} sz={sz}")
 
     async def stop(self):
@@ -147,14 +136,10 @@ class PredictBot:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Predict.fun Fast-Expiry Bot")
-    parser.add_argument("--dry-run", action="store_true")
-    args = parser.parse_args()
-
     config = Config()
     BotLogger(config)
 
-    bot = PredictBot(config, dry_run=args.dry_run)
+    bot = PredictBot(config)
 
     def shutdown(signum, frame):
         log.info(f"Received signal {signum}, shutting down…")
