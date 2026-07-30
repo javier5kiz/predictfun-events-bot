@@ -213,33 +213,41 @@ class Trader:
             log.error(f"Order signing failed: {e}")
             return None
 
+        # Guard: order_hash must be a non-empty string
+        if not order_hash:
+            log.error("Order hash is empty — signing may have failed silently")
+            return None
+
         body = {
             "data": {
                 "order": {
-                    "hash":          order_hash,
-                    "salt":          signed_order["salt"],
-                    "maker":         maker,
-                    "signer":        signer,
-                    "taker":         taker,
+                    "hash":          str(order_hash),
+                    "salt":          str(signed_order["salt"]),
+                    "maker":         str(maker),
+                    "signer":        str(signer),
+                    "taker":         str(taker),
                     "tokenId":       str(token_id),
-                    "makerAmount":   signed_order["makerAmount"],
-                    "takerAmount":   signed_order["takerAmount"],
-                    "expiration":    signed_order["expiration"],
-                    "nonce":         signed_order["nonce"],
-                    "feeRateBps":    signed_order["feeRateBps"],
-                    "side":          signed_order["side"],
-                    "signatureType": signed_order["signatureType"],
-                    "signature":     signed_order["signature"],
+                    "makerAmount":   str(signed_order["makerAmount"]),
+                    "takerAmount":   str(signed_order["takerAmount"]),
+                    "expiration":    str(signed_order["expiration"]),
+                    "nonce":         str(signed_order["nonce"]),
+                    "feeRateBps":    str(signed_order["feeRateBps"]),
+                    "side":          int(signed_order["side"]),
+                    "signatureType": int(signed_order["signatureType"]),
+                    "signature":     str(signed_order["signature"]),
                 },
                 "pricePerShare": "1",
                 "strategy":      "MARKET",
                 "slippageBps":   "10000",
+                "isFillOrKill":  True,
             }
         }
 
         try:
+            # Use POST /v1/orders (regular order creation for EOA wallet)
+            # NOT /v1/oauth/orders (that's the OAuth list-orders endpoint)
             resp = self.client.session.post(
-                f"{self.client.base_url}/v1/oauth/orders",
+                f"{self.client.base_url}/v1/orders",
                 headers=self.auth.jwt_headers,
                 json=body,
                 timeout=10,
